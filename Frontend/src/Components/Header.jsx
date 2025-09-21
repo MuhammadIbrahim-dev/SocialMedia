@@ -1,31 +1,141 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { FiLogIn, FiUserPlus, FiUser, FiLogOut, FiMessageSquare } from 'react-icons/fi';
-import { logout } from '../redux/AuthSlice/Auth.Slice';
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
+import { logout } from "../redux/AuthSlice/Auth.Slice";
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Header() {
-  const { user } = useSelector((state) => state.auth);
- const dispatch = useDispatch();
-  return (
-    <header className="sticky top-0 z-50 flex items-center justify-between bg-white px-4 sm:px-8 py-4 shadow-md transition-colors duration-300">
-      <Link to="/" className="flex items-center gap-2 text-2xl font-bold text-indigo-600">
-        <FiMessageSquare />
-        Connecto
-      </Link>
-      <nav className="flex items-center gap-2 sm:gap-6">
-        {user ? (
-          <>
-            <Link to="/profile" className="flex items-center gap-2 rounded-full px-4 py-2 font-semibold text-gray-700 transition-all duration-300 hover:bg-indigo-600 hover:text-white"><FiUser /> Profile</Link>
-            <span className="flex items-center gap-2 rounded-full px-4 py-2 font-semibold text-gray-700 transition-all duration-300 hover:bg-indigo-600 hover:text-white" onClick={() => dispatch(logout())}><FiLogOut /> Logout</span>
-          </>
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const [isOpen, setIsOpen] = useState(false);
 
-        ) : (
-          <>
-            <Link to="/signin" className="flex items-center gap-2 rounded-full px-4 py-2 font-semibold text-gray-700 transition-all duration-300 hover:bg-indigo-600 hover:text-white"><FiLogIn /> Sign In</Link>
-            <Link to="/signup" className="flex items-center gap-2 rounded-full bg-indigo-600 px-4 py-2 font-semibold text-white transition-all duration-300 hover:opacity-90"><FiUserPlus /> Sign Up</Link>
-          </>
-        )}
-      </nav>
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  return (
+    <header className="sticky top-0 z-50 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 shadow-lg">
+      <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+        {/* Logo */}
+        <Link
+          to="/"
+          className="font-extrabold text-2xl cursor-pointer text-white tracking-wide hover:scale-105 transition-transform"
+        >
+          Creato
+        </Link>
+
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex gap-6 items-center text-white font-medium">
+          <Link
+            to="/leaderboard"
+            className="hover:text-yellow-300 cursor-pointer transition-colors"
+          >
+            Leaderboard
+          </Link>
+          {user ? (
+            <>
+              <Link
+                to="/create"
+                className="px-4 py-2 rounded-full cursor-pointer bg-gradient-to-r from-green-400 to-emerald-600 text-white shadow-md hover:shadow-lg transition-all"
+              >
+                + Create Post
+              </Link>
+              <Link
+                to={`/profile/${user.id}`}
+                className="hover:text-yellow-300 cursor-pointer transition-colors"
+              >
+                {user.name}
+              </Link>
+              <button
+                onClick={() => dispatch(logout())}
+                className="px-4 py-2 rounded-full cursor-pointer bg-gradient-to-r from-red-400 to-rose-600 text-white shadow-md hover:shadow-lg transition-all"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/signin"
+                className="hover:text-yellow-300 cursor-pointer transition-colors"
+              >
+                Sign In
+              </Link>
+              <Link
+                to="/signup"
+                className="px-4 py-2 rounded-full cursor-pointer bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-md hover:shadow-lg transition-all"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
+        </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={toggleMenu}
+          className="md:hidden p-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition"
+        >
+          {isOpen ? <FiX className="text-2xl" /> : <FiMenu className="text-2xl" />}
+        </button>
+      </div>
+
+      {/* Mobile Nav Dropdown */}
+      {isOpen && (
+        <nav className="md:hidden bg-white/10 backdrop-blur-lg border-t border-white/20 shadow-xl animate-slide-down">
+          <div className="flex flex-col gap-4 p-6 text-white font-medium">
+            <Link
+              to="/leaderboard"
+              className="hover:text-yellow-300 transition-colors cursor-pointer"
+              onClick={toggleMenu}
+            >
+              Leaderboard
+            </Link>
+            {user ? (
+              <>
+                <Link
+                  to="/create"
+                  className="px-4 py-2 rounded-full bg-gradient-to-r cursor-pointer from-green-400 to-emerald-600 text-white shadow-md hover:shadow-lg transition-all"
+                  onClick={toggleMenu}
+                >
+                  + Create Post
+                </Link>
+                <Link
+                  to={`/profile/${user.id}`}
+                  className="hover:text-yellow-300 cursor-pointer transition-colors"
+                  onClick={toggleMenu}
+                >
+                  {user.name}
+                </Link>
+                <button
+                  onClick={() => {
+                    dispatch(logout());
+                    toggleMenu();
+                  }}
+                  className="px-4 py-2 cursor-pointer rounded-full bg-gradient-to-r from-red-400 to-rose-600 text-white shadow-md hover:shadow-lg transition-all"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/signin"
+                  className="hover:text-yellow-300 cursor-pointer transition-colors"
+                  onClick={toggleMenu}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-4 py-2 rounded-full cursor-pointer bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-md hover:shadow-lg transition-all"
+                  onClick={toggleMenu}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+          </div>
+        </nav>
+      )}
     </header>
   );
 }
