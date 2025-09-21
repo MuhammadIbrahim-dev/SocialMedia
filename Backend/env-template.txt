@@ -1,0 +1,18 @@
+# Copy this content to a file named .env in the Backend directory
+
+# Database
+MONGODB_URI=mongodb://localhost:27017/hackathon
+
+# JWT
+JWT_SECRET=your-jwt-secret-key-here
+
+# Cloudinary (Optional - for avatar uploads)
+CLOUDINARY_CLOUD_NAME=your-cloudinary-cloud-name
+CLOUDINARY_API_KEY=your-cloudinary-api-key
+CLOUDINARY_API_SECRET=your-cloudinary-api-secret
+
+# Gemini AI (Required for content generation)
+GEMINI_API_KEY=your-actual-gemini-api-key-here
+
+# Server
+PORT=8000

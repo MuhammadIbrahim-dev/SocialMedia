@@ -8,6 +8,16 @@ const userSchema = new mongoose.Schema(
       required: true, // make sure name is required
       trim: true,
     },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
+      minlength: 3,
+      maxlength: 30,
+      match: /^[a-zA-Z0-9_]+$/, // Only alphanumeric and underscore
+    },
     email: {
       type: String,
       required: true,
@@ -15,21 +25,18 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    avatar :{
-        type: String,
-        default: ''
-
+    avatar: {
+      type: String,
+      default: ''
     },
-    bio :{
-        type: String,
-        default: ''
-
-
+    bio: {
+      type: String,
+      default: '',
+      maxlength: 500
     },
-    score :{
-        type: Number,
-        default: 0
-
+    score: {
+      type: Number,
+      default: 0
     },
 
 

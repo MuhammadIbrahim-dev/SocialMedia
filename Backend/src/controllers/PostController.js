@@ -67,11 +67,48 @@ export const getPost = async (req, res) => {
 };
 
 /**
+ * Get posts by user ID
+ */
+export const getPostsByUser = async (req, res) => {
+  try {
+    const posts = await Post.find({ userId: req.params.userId })
+      .populate('userId', 'username avatar score')
+      .sort({ createdAt: -1 });
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error('Error fetching posts by user:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+/**
  * Update a post
  */
 export const updatePost = async (req, res) => {
   try {
     const { title, content, tags } = req.body;
+    
+    // Validation
+    if (!title || title.trim().length === 0) {
+      return res.status(400).json({ message: 'Title is required' });
+    }
+    if (title.trim().length < 3) {
+      return res.status(400).json({ message: 'Title must be at least 3 characters long' });
+    }
+    if (title.trim().length > 200) {
+      return res.status(400).json({ message: 'Title must be less than 200 characters' });
+    }
+    
+    if (!content || content.trim().length === 0) {
+      return res.status(400).json({ message: 'Content is required' });
+    }
+    if (content.trim().length < 10) {
+      return res.status(400).json({ message: 'Content must be at least 10 characters long' });
+    }
+    if (content.trim().length > 10000) {
+      return res.status(400).json({ message: 'Content must be less than 10,000 characters' });
+    }
+
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).json({ message: 'Post not found' });
 
@@ -79,13 +116,15 @@ export const updatePost = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized to update this post' });
     }
 
-    post.title = title || post.title;
-    post.content = content || post.content;
+    // Update post fields
+    post.title = title.trim();
+    post.content = content.trim();
     post.tags = Array.isArray(tags)
-      ? tags
+      ? tags.filter(tag => tag.trim().length > 0)
       : tags
-      ? tags.split(',').map((t) => t.trim())
+      ? tags.split(',').map((t) => t.trim()).filter(tag => tag.length > 0)
       : post.tags;
+    post.updatedAt = new Date();
 
     await post.save();
     const populatedPost = await Post.findById(post._id).populate(
@@ -95,6 +134,9 @@ export const updatePost = async (req, res) => {
     res.json(populatedPost);
   } catch (err) {
     console.error('Error updating post:', err);
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ message: 'Validation error', details: err.message });
+    }
     res.status(500).json({ message: 'Server error' });
   }
 };
@@ -111,8 +153,16 @@ export const deletePost = async (req, res) => {
       return res.status(403).json({ message: 'Unauthorized to delete this post' });
     }
 
+    // Delete associated comments first
+    await Comment.deleteMany({ postId: req.params.id });
+    
+    // Delete the post
     await post.deleteOne();
-    res.json({ message: 'Post deleted successfully' });
+    
+    res.json({ 
+      message: 'Post deleted successfully',
+      deletedPostId: req.params.id
+    });
   } catch (err) {
     console.error('Error deleting post:', err);
     res.status(500).json({ message: 'Server error' });

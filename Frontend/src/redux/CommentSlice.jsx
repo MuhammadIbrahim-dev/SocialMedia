@@ -17,11 +17,25 @@ export const addComment = createAsyncThunk(
   }
 );
 
+export const fetchCommentsByUser = createAsyncThunk(
+  "comments/fetchByUser",
+  async (userId, { rejectWithValue }) => {
+    try {
+      const res = await axiosIstance.get(`/comments/user/${userId}`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || "Failed to fetch user comments");
+    }
+  }
+);
+
 const commentsSlice = createSlice({
   name: "comments",
   initialState: {
     items: [],
+    userComments: [], // Comments by specific user
     status: "idle", // 'idle' | 'loading' | 'succeeded' | 'failed'
+    userCommentsStatus: "idle", // Status for user comments
     error: null,
   },
   reducers: {},
@@ -36,6 +50,17 @@ const commentsSlice = createSlice({
       })
       .addCase(addComment.fulfilled, (state, action) => {
         state.items.push(action.payload);
+      })
+      .addCase(fetchCommentsByUser.pending, (state) => {
+        state.userCommentsStatus = "loading";
+      })
+      .addCase(fetchCommentsByUser.fulfilled, (state, action) => {
+        state.userCommentsStatus = "succeeded";
+        state.userComments = action.payload;
+      })
+      .addCase(fetchCommentsByUser.rejected, (state, action) => {
+        state.userCommentsStatus = "failed";
+        state.error = action.payload;
       });
   },
 });

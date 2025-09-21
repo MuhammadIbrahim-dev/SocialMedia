@@ -37,6 +37,19 @@ export const getCommentsForPost = async (req, res) => {
   }
 };
 
+export const getCommentsByUser = async (req, res) => {
+  try {
+    const comments = await Comment.find({ userId: req.params.userId })
+      .populate('userId', 'username avatar score')
+      .populate('postId', 'title image')
+      .sort({ createdAt: -1 });
+    res.json(comments);
+  } catch (err) {
+    console.error('Error fetching comments by user:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 export const updateComment = async (req, res) => {
   try {
     const { content } = req.body;

@@ -1,9 +1,10 @@
 import express from 'express';
 const router = express.Router();
 import { AuthMiddleware as auth } from '../middlerwares/authMiddleware.js';
-import { createComment, getCommentsForPost, updateComment, deleteComment, voteComment } from '../controllers/commentConroller.js';
+import { createComment, getCommentsForPost, getCommentsByUser, updateComment, deleteComment, voteComment } from '../controllers/commentConroller.js';
 
 router.get('/post/:postId', getCommentsForPost);
+router.get('/user/:userId', getCommentsByUser);
 router.post('/post/:postId', auth, createComment);
 
 router.put('/:id', auth, updateComment);

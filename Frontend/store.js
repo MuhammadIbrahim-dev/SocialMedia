@@ -4,6 +4,7 @@ import PostsReducer from './src/redux/PostSlice.jsx'
 import UsersReducer from './src/redux/UserSlice.jsx'
 import CommentsReducer from './src/redux/CommentSlice.jsx'
 import LeaderboardReducer from './src/redux/leaderboard.jsx'
+import ContentReducer from './src/redux/contentSlice.jsx'
 
 export const Store = configureStore({
     reducer:{
@@ -12,5 +13,6 @@ export const Store = configureStore({
         users: UsersReducer,
         comments: CommentsReducer,
         leaderboard: LeaderboardReducer,
+        content: ContentReducer,
     }
 })

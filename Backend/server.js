@@ -1,5 +1,7 @@
 
 import dotenv from 'dotenv'
+dotenv.config()
+
 import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'  
@@ -9,6 +11,7 @@ import UserRouter from './src/Routes/userRoute.js';
 import PostRouter from './src/Routes/PostRoute.js';
 import CommentRouter from './src/Routes/CommentRoute.js';
 import LeaderboardRouter from './src/Routes/leadboard.js';
+import ContentRouter from './src/Routes/contentRoute.js';
 const app = express()
 
 const port = process.env.PORT || 8000
@@ -23,7 +26,6 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-dotenv.config()
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
@@ -33,6 +35,7 @@ app.use('/api/users', UserRouter);
 app.use('/api/posts', PostRouter);
 app.use('/api/comments', CommentRouter);
 app.use('/api/leaderboard', LeaderboardRouter);
+app.use('/api/content', ContentRouter);
 app.get('/', (req, res) => res.send('Community AI Forum backend is running'));
 
 const startServer = async () => {

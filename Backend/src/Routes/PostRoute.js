@@ -1,13 +1,25 @@
 import express from 'express';
 const router = express.Router();
 import { AuthMiddleware as auth } from '../middlerwares/authMiddleware.js';
-import { createPost, getPosts, getPost, vote, } from '../controllers/PostController.js';
+import {
+  createPost,
+  getPosts,
+  getPost,
+  getPostsByUser,
+  updatePost,
+  deletePost,
+  vote,
+} from '../controllers/PostController.js';
 
+// -------------------- Public --------------------
 router.get('/', getPosts);
 router.get('/:id', getPost);
-router.post('/', auth, createPost);
-router.post('/:id/vote', auth, vote);
+router.get('/user/:userId', getPostsByUser);
 
-// router.delete('/:id', auth, deletePost); // deletePost not exported, so commented out
+// -------------------- Protected --------------------
+router.post('/', auth, createPost);
+router.put('/:id', auth, updatePost);
+router.delete('/:id', auth, deletePost);
+router.post('/:id/vote', auth, vote);
 
 export default router;

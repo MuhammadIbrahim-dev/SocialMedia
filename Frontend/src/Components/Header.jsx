@@ -74,7 +74,7 @@ export default function Header() {
           onClick={toggleMenu}
           className="md:hidden p-2 rounded-lg bg-white/20 text-white hover:bg-white/30 transition"
         >
-          {isOpen ? <FiX className="text-2xl" /> : <FiMenu className="text-2xl" />}
+          {isOpen ? <FiX className="cursor-pointer text-2xl" /> : <FiMenu className="cursor-pointer text-2xl" />}
         </button>
       </div>
 
@@ -84,7 +84,7 @@ export default function Header() {
           <div className="flex flex-col gap-4 p-6 text-white font-medium">
             <Link
               to="/leaderboard"
-              className="hover:text-yellow-300 transition-colors cursor-pointer"
+              className="hover:text-yellow-300 cursor-pointer transition-colors cursor-pointer"
               onClick={toggleMenu}
             >
               Leaderboard

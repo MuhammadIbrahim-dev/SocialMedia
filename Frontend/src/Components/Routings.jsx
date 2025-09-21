@@ -6,6 +6,7 @@ import Home from "../pages/Home";
 import PostPage from "../pages/Postpage";
 import CreatePost from "../pages/CreatePost";
 import Profile from "../pages/Profile";
+import EditProfile from "../pages/EditProfile";
 import Leaderboard from "../pages/Leaderboard";
 import { useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
@@ -22,6 +23,7 @@ export const Routing = () => {
       <Route path="/post/:id" element={user ? <PostPage /> : <SignIn />} />
       <Route path="/create" element={user ? <CreatePost /> : <SignIn />} />
       <Route path="/profile/:id" element={user ? <Profile /> : <SignIn />} />
+      <Route path="/edit-profile" element={user ? <EditProfile /> : <SignIn />} />
       <Route path="/signup" element={!user ? <SignUp /> : <Home />} />
       <Route path="/signin" element={!user ? <SignIn /> : <Home />} />
       {/* <Route path="/profile" element={} />
