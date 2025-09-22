@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosIstance =axios.create({
-  baseURL: "http://localhost:8000/api",
+  baseURL: "https://social-media-ruby-seven.vercel.app/api",
     headers: {
         "Content-type": "application/json",
     },
