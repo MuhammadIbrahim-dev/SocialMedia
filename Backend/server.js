@@ -36,20 +36,19 @@ app.use('/api/posts', PostRouter);
 app.use('/api/comments', CommentRouter);
 app.use('/api/leaderboard', LeaderboardRouter);
 app.use('/api/content', ContentRouter);
+
 app.get('/', (req, res) => res.send('Community AI Forum backend is running'));
- await Connection();
+
 const startServer = async () => {
   try {
     await Connection(); // connect to DB first
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`🚀 Server is running at http://localhost:${port}`);
-    });
   } catch (error) {
     console.error("❌ Server failed to start:", error.message);
+    // Exit the process with an error code if the database connection fails
+    process.exit(1);
   }
 };
 
-// startServer();
-
+startServer();
 
 export default app
