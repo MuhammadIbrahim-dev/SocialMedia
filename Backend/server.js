@@ -29,27 +29,28 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'));
 
+// ✅ Routes
+app.use("/api/auth", AuthRouter);
+app.use("/api/users", UserRouter);
+app.use("/api/posts", PostRouter);
+app.use("/api/comments", CommentRouter);
+app.use("/api/leaderboard", LeaderboardRouter);
+app.use("/api/content", ContentRouter);
 
-app.use('/api/auth',AuthRouter)
-app.use('/api/users', UserRouter);
-app.use('/api/posts', PostRouter);
-app.use('/api/comments', CommentRouter);
-app.use('/api/leaderboard', LeaderboardRouter);
-app.use('/api/content', ContentRouter);
-app.get('/', (req, res) => res.send('Community AI Forum backend is running'));
+app.get("/", (req, res) => res.send("Community AI Forum backend is running"));
 
-const startServer = async () => {
-  try {
-    await Connection(); // connect to DB first
-    app.listen(port, "0.0.0.0", () => {
-      console.log(`🚀 Server is running at http://localhost:${port}`);
-    });
-  } catch (error) {
-    console.error("❌ Server failed to start:", error.message);
-  }
-};
+// ✅ Database connection
+Connection()
+  .then(() => console.log("✅ Database connected"))
+  .catch((err) => console.error("❌ Database connection failed:", err.message));
 
-startServer();
+// ✅ Export app for Vercel
+export default app;
 
-
-export default app
+// ✅ Only run app.listen() locally (not on Vercel)
+if (process.env.NODE_ENV !== "production") {
+  const port = process.env.PORT || 8000;
+  app.listen(port, "0.0.0.0", () => {
+    console.log(`🚀 Server running locally at http://localhost:${port}`);
+  });
+}
