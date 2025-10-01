@@ -37,7 +37,7 @@ app.use('/api/comments', CommentRouter);
 app.use('/api/leaderboard', LeaderboardRouter);
 app.use('/api/content', ContentRouter);
 app.get('/', (req, res) => res.send('Community AI Forum backend is running'));
-
+ await Connection();
 const startServer = async () => {
   try {
     await Connection(); // connect to DB first
@@ -49,7 +49,7 @@ const startServer = async () => {
   }
 };
 
-startServer();
+// startServer();
 
 
 export default app
