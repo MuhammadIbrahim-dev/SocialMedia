@@ -19,7 +19,7 @@ const port = process.env.PORT || 8000
 
 // CORS configuration
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:3000"],
+  origin: ["http://localhost:5173", "http://localhost:3000", "http://mediabackend.vercel.app"],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
@@ -37,6 +37,10 @@ app.use("/api/posts", PostRouter);
 app.use("/api/comments", CommentRouter);
 app.use("/api/leaderboard", LeaderboardRouter);
 app.use("/api/content", ContentRouter);
+
+// Handle favicon requests from browsers
+app.get('/favicon.ico', (req, res) => res.status(204).end());
+app.get('/favicon.png', (req, res) => res.status(204).end());
 
 app.get("/", (req, res) => res.send("Community AI Forum backend is running"));
 
