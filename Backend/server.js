@@ -41,24 +41,17 @@ app.use("/api/content", ContentRouter);
 app.get("/", (req, res) => res.send("Community AI Forum backend is running"));
 
 // ✅ Database connection
-await Connection()
-
-app.listen(port, async() => {
-  await Connection()
-  console.log(`🚀 Server running at http://localhost:${port}`)
-  });
+Connection().catch(err => {
+  console.error("Failed to connect to the database", err);
+  process.exit(1);
+});
 
 // ✅ Export app for Vercel
 export default app;
 
-// ✅ Only run app.listen() locally (not on Vercel)
-// if (process.env.NODE_ENV !== "production") {
-//   const port = process.env.PORT || 8000;
-//   app.listen(port, async() => {
-//    await Connection()
-//     console.log(`🚀 Server running locally at http://localhost:${port}`);
-//   }
-//   );
-//}
-
-
+// ✅ Only run app.listen() when not in a serverless environment (like Vercel)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`🚀 Server running locally at http://localhost:${port}`);
+  });
+}
