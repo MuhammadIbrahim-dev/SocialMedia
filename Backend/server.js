@@ -45,10 +45,7 @@ app.get('/favicon.png', (req, res) => res.status(204).end());
 app.get("/", (req, res) => res.send("Community AI Forum backend is running"));
 
 // ✅ Database connection
-await Connection().catch(err => {
-  console.error("Failed to connect to the database", err);
-  process.exit(1);
-});
+await Connection()
 
 // ✅ Export app for Vercel
 export default app;
